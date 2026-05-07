@@ -7,11 +7,7 @@
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
-      },
-      "env": {
-        "EXPO_USE_FAST_RESOLVER": "1"
+        "buildType": "apk"
       }
     },
     "production": {
