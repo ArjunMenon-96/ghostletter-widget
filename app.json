@@ -22,7 +22,7 @@
         "backgroundColor": "#09090b"
       },
       "package": "com.ghostletter.app",
-      "versionCode": 3
+      "versionCode": 4
     },
     "web": {
       "favicon": "./assets/favicon.png"
