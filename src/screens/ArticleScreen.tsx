@@ -38,7 +38,7 @@ export default function ArticleScreen({ item, onBack }: Props) {
 
       {loading && (
         <View style={styles.loadingOverlay} pointerEvents="none">
-          <ActivityIndicator size="large" color="#7c3aed" />
+          <ActivityIndicator size="large" color="#f5a623" />
         </View>
       )}
 
@@ -53,30 +53,36 @@ export default function ArticleScreen({ item, onBack }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#09090b" },
+  container: { flex: 1, backgroundColor: "#0a0a08" },
   toolbar: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#09090b",
+    backgroundColor: "#111109",
     borderBottomWidth: 1,
-    borderBottomColor: "#27272a",
-    paddingHorizontal: 12,
+    borderBottomColor: "#2a2a20",
+    paddingHorizontal: 14,
     paddingVertical: 10,
     gap: 12,
   },
   backBtn: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 6,
+    borderWidth: 1,
+    borderColor: "#2a2a20",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   backArrow: {
-    color: "#a78bfa",
-    fontSize: 18,
+    color: "#f5a623",
+    fontSize: 14,
+    fontWeight: "700",
   },
   backText: {
-    color: "#a78bfa",
-    fontSize: 14,
-    fontWeight: "500",
+    color: "#f5a623",
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 1,
   },
   toolbarCenter: {
     flex: 1,
@@ -85,22 +91,25 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   sourceDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
   },
   toolbarSource: {
-    color: "#a1a1aa",
-    fontSize: 13,
+    color: "#a89060",
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 0.5,
     flex: 1,
+    textTransform: "uppercase",
   },
   webview: {
     flex: 1,
-    backgroundColor: "#09090b",
+    backgroundColor: "#0a0a08",
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "#09090b",
+    backgroundColor: "#0a0a08",
     alignItems: "center",
     justifyContent: "center",
     zIndex: 10,

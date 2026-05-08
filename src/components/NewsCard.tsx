@@ -12,10 +12,22 @@ import { NewsItem } from "../lib/api";
 
 type Props = {
   item: NewsItem;
+  index: number;
   onPress?: () => void;
 };
 
-export default function NewsCard({ item, onPress }: Props) {
+const CAT_ICONS: Record<string, string> = {
+  DeFi: "◈",
+  Markets: "▲",
+  Regulation: "⚖",
+  NFT: "◉",
+  Blockchain: "⬡",
+  News: "◎",
+  Mining: "⛏",
+  Fintech: "₿",
+};
+
+export default function NewsCard({ item, index, onPress }: Props) {
   const timeAgo = (() => {
     try {
       return formatDistanceToNow(new Date(item.pubDate), { addSuffix: true });
@@ -25,138 +37,155 @@ export default function NewsCard({ item, onPress }: Props) {
   })();
 
   function handlePress() {
-    if (onPress) {
-      onPress();
-    } else {
-      Linking.openURL(item.link);
-    }
+    if (onPress) onPress();
+    else Linking.openURL(item.link);
   }
+
+  const icon = CAT_ICONS[item.category] ?? "◎";
 
   return (
     <TouchableOpacity
-      style={styles.card}
+      style={styles.row}
       onPress={handlePress}
-      activeOpacity={0.75}
+      activeOpacity={0.7}
     >
-      <View style={styles.body}>
-        <View style={styles.meta}>
-          <View
-            style={[
-              styles.sourceBadge,
-              { backgroundColor: item.sourceColor + "22", borderColor: item.sourceColor + "44" },
-            ]}
-          >
-            <View style={[styles.dot, { backgroundColor: item.sourceColor }]} />
-            <Text style={[styles.sourceText, { color: item.sourceColor }]}>
-              {item.source}
+      {/* Thumbnail */}
+      <View style={styles.thumbWrap}>
+        {item.imageUrl ? (
+          <Image
+            source={{ uri: item.imageUrl }}
+            style={styles.thumb}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={[styles.thumbFallback, { borderLeftColor: item.sourceColor }]}>
+            <Text style={[styles.fallbackIcon, { color: item.sourceColor }]}>{icon}</Text>
+            <Text style={styles.fallbackSource} numberOfLines={1}>
+              {item.source.split(" ")[0].toUpperCase()}
             </Text>
           </View>
-          <View style={styles.categoryBadge}>
-            <Text style={styles.categoryText}>{item.category}</Text>
-          </View>
-          <Text style={styles.time}>{timeAgo}</Text>
+        )}
+        {/* Index badge */}
+        <View style={styles.indexBadge}>
+          <Text style={styles.indexText}>{String(index + 1).padStart(2, "0")}</Text>
         </View>
+      </View>
 
-        <View style={styles.content}>
-          {item.imageUrl ? (
-            <Image
-              source={{ uri: item.imageUrl }}
-              style={styles.thumbnail}
-              resizeMode="cover"
-            />
-          ) : null}
-          <View style={styles.textBlock}>
-            <Text style={styles.title} numberOfLines={2}>
-              {item.title}
-            </Text>
-            {item.summary ? (
-              <Text style={styles.summary} numberOfLines={2}>
-                {item.summary}
-              </Text>
-            ) : null}
-          </View>
+      {/* Text block */}
+      <View style={styles.textBlock}>
+        <View style={styles.metaRow}>
+          <Text style={styles.sourceLabel}>{item.source.toUpperCase()}</Text>
+          <Text style={styles.catLabel}>{item.category.toUpperCase()}</Text>
+          <Text style={styles.timeLabel}>{timeAgo}</Text>
         </View>
+        <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
+        {item.summary ? (
+          <Text style={styles.summary} numberOfLines={1}>{item.summary}</Text>
+        ) : null}
       </View>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "#18181b",
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: "#27272a",
-    marginBottom: 10,
-    overflow: "hidden",
+  row: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#1a1a14",
+    backgroundColor: "#0a0a08",
   },
-  body: {
-    padding: 14,
+
+  /* Thumbnail */
+  thumbWrap: {
+    width: 84,
+    height: 80,
+    flexShrink: 0,
+    position: "relative",
+    borderRightWidth: 1,
+    borderRightColor: "#1a1a14",
+    backgroundColor: "#111109",
   },
-  meta: {
+  thumb: {
+    width: "100%",
+    height: "100%",
+  },
+  thumbFallback: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    borderLeftWidth: 2,
+    borderLeftColor: "#f5a623",
+  },
+  fallbackIcon: {
+    fontSize: 22,
+    opacity: 0.6,
+  },
+  fallbackSource: {
+    fontSize: 6,
+    color: "#444",
+    marginTop: 3,
+    letterSpacing: 0.5,
+    fontWeight: "700",
+  },
+  indexBadge: {
+    position: "absolute",
+    top: 4,
+    left: 4,
+    backgroundColor: "rgba(0,0,0,0.75)",
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+  },
+  indexText: {
+    color: "#f5a623",
+    fontSize: 8,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+  },
+
+  /* Text */
+  textBlock: {
+    flex: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    justifyContent: "center",
+  },
+  metaRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    marginBottom: 10,
+    marginBottom: 5,
     flexWrap: "wrap",
   },
-  sourceBadge: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 20,
-    borderWidth: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+  sourceLabel: {
+    fontSize: 8,
+    fontWeight: "700",
+    color: "#a89060",
+    backgroundColor: "#1e1e14",
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    letterSpacing: 0.3,
   },
-  dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    marginRight: 5,
+  catLabel: {
+    fontSize: 8,
+    fontWeight: "700",
+    color: "#52c41a",
+    letterSpacing: 0.3,
   },
-  sourceText: {
-    fontSize: 11,
-    fontWeight: "600",
-  },
-  categoryBadge: {
-    backgroundColor: "#27272a",
-    borderRadius: 20,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-  },
-  categoryText: {
-    color: "#a1a1aa",
-    fontSize: 11,
-  },
-  time: {
-    color: "#52525b",
-    fontSize: 11,
+  timeLabel: {
+    fontSize: 8,
+    color: "#3a3a30",
     marginLeft: "auto",
   },
-  content: {
-    flexDirection: "row",
-    gap: 10,
-  },
-  thumbnail: {
-    width: 70,
-    height: 70,
-    borderRadius: 8,
-    backgroundColor: "#27272a",
-    flexShrink: 0,
-  },
-  textBlock: {
-    flex: 1,
-  },
   title: {
-    color: "#f4f4f5",
-    fontSize: 14,
+    color: "#d4c08a",
+    fontSize: 13,
     fontWeight: "600",
-    lineHeight: 20,
-    marginBottom: 4,
+    lineHeight: 18,
+    marginBottom: 3,
   },
   summary: {
-    color: "#71717a",
-    fontSize: 12,
-    lineHeight: 17,
+    color: "#4a4a40",
+    fontSize: 11,
+    lineHeight: 15,
   },
 });
