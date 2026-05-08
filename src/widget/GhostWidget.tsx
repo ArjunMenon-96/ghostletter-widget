@@ -28,7 +28,7 @@ function StoryRow({ item, index }: { item: WidgetNewsItem; index: number }) {
         paddingHorizontal: 10,
         borderBottomWidth: 1,
         borderBottomColor: "#1a1a14",
-        backgroundColor: "#0a0a08",
+        backgroundColor: index % 2 === 0 ? "#0a0a08" : "#0d0d0a",
       }}
     >
       {/* Index */}
@@ -39,16 +39,14 @@ function StoryRow({ item, index }: { item: WidgetNewsItem; index: number }) {
           color: "#f5a623",
           fontWeight: "700",
           marginRight: 8,
-          marginTop: 1,
+          marginTop: 2,
         }}
       />
 
       {/* Content */}
       <FlexWidget style={{ flexDirection: "column", width: "match_parent" }}>
         {/* Meta row */}
-        <FlexWidget
-          style={{ flexDirection: "row", alignItems: "center", marginBottom: 3 }}
-        >
+        <FlexWidget style={{ flexDirection: "row", alignItems: "center", marginBottom: 3 }}>
           <TextWidget
             text={item.source.toUpperCase()}
             style={{ fontSize: 8, color: "#a89060", fontWeight: "700", marginRight: 6 }}
@@ -78,14 +76,13 @@ export function GhostWidget({ items, lastUpdated }: Props) {
   const displayItems = items.slice(0, 5);
 
   return (
+    // No borderRadius or overflow:hidden on root — these break Android widget rendering
     <FlexWidget
       style={{
         height: "match_parent",
         width: "match_parent",
         flexDirection: "column",
         backgroundColor: "#0a0a08",
-        borderRadius: 14,
-        overflow: "hidden",
       }}
     >
       {/* Header */}
@@ -93,23 +90,17 @@ export function GhostWidget({ items, lastUpdated }: Props) {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          paddingHorizontal: 10,
-          paddingVertical: 7,
+          paddingHorizontal: 12,
+          paddingVertical: 8,
           backgroundColor: "#111109",
-          borderBottomWidth: 1,
-          borderBottomColor: "#2a2a20",
+          borderBottomWidth: 2,
+          borderBottomColor: "#f5a62344",
         }}
       >
         <TextWidget
           text="GHOSTLETTER"
-          style={{
-            color: "#f5a623",
-            fontSize: 11,
-            fontWeight: "700",
-            marginRight: 8,
-          }}
+          style={{ color: "#f5a623", fontSize: 12, fontWeight: "700", marginRight: 10 }}
         />
-
         <FlexWidget style={{ flexDirection: "row", alignItems: "center" }}>
           <FlexWidget
             style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: "#f5a623", marginRight: 4 }}
@@ -121,7 +112,7 @@ export function GhostWidget({ items, lastUpdated }: Props) {
         </FlexWidget>
       </FlexWidget>
 
-      {/* Stories */}
+      {/* Stories list */}
       {displayItems.length > 0 ? (
         <ListWidget style={{ height: "match_parent" }}>
           {displayItems.map((item, i) => (
@@ -129,7 +120,9 @@ export function GhostWidget({ items, lastUpdated }: Props) {
           ))}
         </ListWidget>
       ) : (
-        <FlexWidget style={{ height: "match_parent", alignItems: "center", justifyContent: "center" }}>
+        <FlexWidget
+          style={{ height: "match_parent", alignItems: "center", justifyContent: "center", backgroundColor: "#0a0a08" }}
+        >
           <TextWidget
             text="FETCHING FEED..."
             style={{ color: "#3a3a30", fontSize: 10, fontWeight: "700" }}
@@ -142,7 +135,7 @@ export function GhostWidget({ items, lastUpdated }: Props) {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          paddingHorizontal: 10,
+          paddingHorizontal: 12,
           paddingVertical: 5,
           backgroundColor: "#111109",
           borderTopWidth: 1,
