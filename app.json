@@ -22,36 +22,12 @@
         "backgroundColor": "#09090b"
       },
       "package": "com.ghostletter.app",
-      "versionCode": 4
+      "versionCode": 6
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      [
-        "react-native-android-widget",
-        {
-          "widgets": [
-            {
-              "name": "GhostWidget",
-              "label": "GhostLetter Widget",
-              "minWidth": "180dp",
-              "minHeight": "110dp",
-              "minResizeWidth": "180dp",
-              "minResizeHeight": "80dp",
-              "maxResizeWidth": "500dp",
-              "maxResizeHeight": "400dp",
-              "targetCellWidth": 4,
-              "targetCellHeight": 2,
-              "resizeMode": "horizontal|vertical",
-              "description": "Latest crypto & DeFi headlines",
-              "previewImage": "./assets/widget-preview.png",
-              "updatePeriodMillis": 1800000
-            }
-          ]
-        }
-      ]
-    ],
+    "plugins": [],
     "extra": {
       "eas": {
         "projectId": "04a76209-8492-42cd-ac3f-d49dbc335467"
