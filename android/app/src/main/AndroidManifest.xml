@@ -24,6 +24,7 @@
     <receiver android:name=".GhostWidgetProvider" android:exported="true" android:label="GhostLetter Widget">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+        <action android:name="com.ghostletter.app.REFRESH_WIDGET"/>
       </intent-filter>
       <meta-data android:name="android.appwidget.provider" android:resource="@xml/widgetprovider_ghostwidget"/>
     </receiver>

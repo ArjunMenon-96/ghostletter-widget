@@ -31,6 +31,15 @@
             android:textColor="#f5a623"
             android:textSize="8sp"
             android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/gl_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  ↻"
+            android:textColor="#f5a623"
+            android:textSize="14sp"
+            android:paddingLeft="8dp"
+            android:paddingRight="4dp"/>
     </LinearLayout>
 
     <!-- Story 0 -->

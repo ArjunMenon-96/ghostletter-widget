@@ -3,6 +3,7 @@ package com.ghostletter.app
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -17,6 +18,21 @@ import java.util.Locale
 import java.util.TimeZone
 
 class GhostWidgetProvider : AppWidgetProvider() {
+
+    companion object {
+        const val ACTION_REFRESH = "com.ghostletter.app.REFRESH_WIDGET"
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        if (intent.action == ACTION_REFRESH) {
+            val mgr = AppWidgetManager.getInstance(context)
+            val ids = mgr.getAppWidgetIds(ComponentName(context, GhostWidgetProvider::class.java))
+            if (ids.isNotEmpty()) {
+                onUpdate(context, mgr, ids)
+            }
+        }
+    }
 
     override fun onUpdate(
         context: Context,
@@ -99,7 +115,17 @@ class GhostWidgetProvider : AppWidgetProvider() {
     private fun updateWidget(ctx: Context, mgr: AppWidgetManager, id: Int, stories: List<Story>) {
         val views = RemoteViews(ctx.packageName, R.layout.ghost_widget)
 
-        // App launch intent on header
+        // Refresh button — broadcasts ACTION_REFRESH back to this provider
+        val refreshIntent = Intent(ctx, GhostWidgetProvider::class.java).apply {
+            action = ACTION_REFRESH
+        }
+        val refreshPi = PendingIntent.getBroadcast(
+            ctx, 200, refreshIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        views.setOnClickPendingIntent(R.id.gl_refresh, refreshPi)
+
+        // App launch intent on logo/header area
         val launchApp = ctx.packageManager.getLaunchIntentForPackage(ctx.packageName)
         if (launchApp != null) {
             val pi = PendingIntent.getActivity(ctx, 0, launchApp, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
