@@ -109,7 +109,6 @@ class GhostWidgetProvider : AppWidgetProvider() {
         val rowIds = intArrayOf(R.id.gl_row_0, R.id.gl_row_1, R.id.gl_row_2, R.id.gl_row_3, R.id.gl_row_4)
         val numIds = intArrayOf(R.id.gl_num_0, R.id.gl_num_1, R.id.gl_num_2, R.id.gl_num_3, R.id.gl_num_4)
         val srcIds = intArrayOf(R.id.gl_src_0, R.id.gl_src_1, R.id.gl_src_2, R.id.gl_src_3, R.id.gl_src_4)
-        val catIds = intArrayOf(R.id.gl_cat_0, R.id.gl_cat_1, R.id.gl_cat_2, R.id.gl_cat_3, R.id.gl_cat_4)
         val timeIds = intArrayOf(R.id.gl_time_0, R.id.gl_time_1, R.id.gl_time_2, R.id.gl_time_3, R.id.gl_time_4)
         val titleIds = intArrayOf(R.id.gl_title_0, R.id.gl_title_1, R.id.gl_title_2, R.id.gl_title_3, R.id.gl_title_4)
 
@@ -117,8 +116,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
             if (i < stories.size) {
                 val s = stories[i]
                 views.setTextViewText(numIds[i], "${i + 1}")
-                views.setTextViewText(srcIds[i], s.source.take(12))
-                views.setTextViewText(catIds[i], if (s.category.isNotEmpty()) "· ${s.category.take(10)}" else "")
+                views.setTextViewText(srcIds[i], if (s.category.isNotEmpty()) "${s.source.take(10)}  ·  ${s.category.take(8)}" else s.source.take(14))
                 views.setTextViewText(timeIds[i], timeAgo(s.pubDate))
                 views.setTextViewText(titleIds[i], s.title)
 
@@ -133,7 +131,6 @@ class GhostWidgetProvider : AppWidgetProvider() {
             } else {
                 views.setTextViewText(numIds[i], "")
                 views.setTextViewText(srcIds[i], "")
-                views.setTextViewText(catIds[i], "")
                 views.setTextViewText(timeIds[i], "")
                 views.setTextViewText(titleIds[i], "")
             }
