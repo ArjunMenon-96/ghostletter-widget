@@ -28,6 +28,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import com.ghostletter.app.BuildConfig
 
@@ -69,22 +72,36 @@ class GhostWidgetProvider : AppWidgetProvider() {
         for (id in appWidgetIds) showLoading(context, appWidgetManager, id)
 
         Thread {
+            val pool = Executors.newCachedThreadPool()
             try {
                 if (!isNetworkAvailable(context)) {
                     for (id in appWidgetIds) showError(context, appWidgetManager, id, offline = true)
                     return@Thread
                 }
-                val prices  = tryFetchPrices()
-                val stories = fetchStories()
+
+                // Fetch prices and stories concurrently
+                val pricesFuture  = pool.submit<List<CoinPrice>> { tryFetchPrices() }
+                val storiesFuture = pool.submit<List<Story>>     { fetchStories() }
+
+                val prices  = pricesFuture.get(12, TimeUnit.SECONDS)
+                val stories = storiesFuture.get(12, TimeUnit.SECONDS)
+
                 for (id in appWidgetIds) {
                     val rows = visibleRows(appWidgetManager, id)
-                    val thumbs = stories.map { loadThumb(it.imageUrl) }
+                    // Only fetch thumbnails for rows that are actually visible, in parallel
+                    val thumbFutures: List<Future<Bitmap?>> = stories.take(rows).map { s ->
+                        pool.submit<Bitmap?> { loadThumb(s.imageUrl) }
+                    }
+                    val thumbs = thumbFutures.map { f ->
+                        try { f.get(5, TimeUnit.SECONDS) } catch (_: Exception) { null }
+                    }
                     updateWidget(context, appWidgetManager, id, stories, prices, rows, thumbs)
                 }
             } catch (e: Exception) {
                 for (id in appWidgetIds) showError(context, appWidgetManager, id, offline = false)
             } finally {
                 isUpdating.set(false)
+                pool.shutdownNow()
             }
         }.start()
     }
