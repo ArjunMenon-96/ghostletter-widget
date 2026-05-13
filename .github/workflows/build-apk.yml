@@ -63,7 +63,8 @@ jobs:
             -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/android/app/ghostletter.jks \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }} \
+            --stacktrace
 
       - name: Rename APK
         run: |

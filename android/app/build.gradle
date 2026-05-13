@@ -87,18 +87,19 @@ def enableMinifyInReleaseBuilds = (findProperty('android.enableMinifyInReleaseBu
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 android {
-    ndkVersion safeExtGet('ndkVersion', '27.1.12297006')
+    ndkVersion "27.1.12297006"
 
-    buildToolsVersion safeExtGet('buildToolsVersion', '35.0.0')
-    compileSdk safeExtGet('compileSdkVersion', 35)
+    buildToolsVersion "35.0.0"
+    compileSdk 35
 
     namespace 'com.ghostletter.app'
     defaultConfig {
         applicationId 'com.ghostletter.app'
-        minSdkVersion safeExtGet('minSdkVersion', 24)
-        targetSdkVersion safeExtGet('targetSdkVersion', 35)
-        versionCode (findProperty('versionCode') ?: 9).toInteger()
-        versionName findProperty('versionName') ?: "1.0.0"
+        minSdkVersion 24
+        targetSdkVersion 35
+        def rawVersionCode = findProperty('versionCode')
+        versionCode rawVersionCode != null ? rawVersionCode.toString().toInteger() : 9
+        versionName (findProperty('versionName') ?: "1.0.0").toString()
 
         buildConfigField "String", "REACT_NATIVE_RELEASE_LEVEL", "\"${findProperty('reactNativeReleaseLevel') ?: 'stable'}\""
     }
