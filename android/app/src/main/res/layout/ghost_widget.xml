@@ -12,34 +12,37 @@
         android:layout_height="32dp"
         android:background="#111109"
         android:gravity="center_vertical"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="6dp"
         android:orientation="horizontal">
         <TextView
             android:id="@+id/gl_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GL"
+            android:textColor="#f5a623"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:paddingRight="8dp"/>
+        <TextView
+            android:id="@+id/gl_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="GHOSTLETTER"
-            android:textColor="#f5a623"
-            android:textSize="11sp"
-            android:textStyle="bold"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="● LIVE"
-            android:textColor="#f5a623"
+            android:text=""
+            android:textColor="#a89060"
             android:textSize="8sp"
-            android:textStyle="bold"/>
+            android:gravity="center_horizontal"
+            android:singleLine="true"/>
         <TextView
             android:id="@+id/gl_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="  ↻"
+            android:text="↻"
             android:textColor="#f5a623"
             android:textSize="14sp"
-            android:paddingLeft="8dp"
-            android:paddingRight="4dp"/>
+            android:paddingLeft="6dp"
+            android:paddingRight="2dp"/>
     </LinearLayout>
 
     <!-- Story 0 -->
@@ -168,11 +171,11 @@
     <!-- Footer -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="18dp"
+        android:layout_height="16dp"
         android:background="#111109"
         android:gravity="center_vertical"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:orientation="horizontal">
         <TextView
             android:id="@+id/gl_footer"

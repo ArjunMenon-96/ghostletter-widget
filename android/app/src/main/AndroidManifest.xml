@@ -24,5 +24,12 @@
       </intent-filter>
       <meta-data android:name="android.appwidget.provider" android:resource="@xml/widgetprovider_ghostwidget"/>
     </receiver>
+    <receiver android:name=".GhostWidgetSmallProvider" android:exported="true" android:label="GhostLetter Widget (Small)">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+        <action android:name="com.ghostletter.app.REFRESH_WIDGET_SMALL"/>
+      </intent-filter>
+      <meta-data android:name="android.appwidget.provider" android:resource="@xml/widgetprovider_ghostwidget_small"/>
+    </receiver>
   </application>
 </manifest>
