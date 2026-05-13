@@ -113,6 +113,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
 
     private fun showLoading(ctx: Context, mgr: AppWidgetManager, id: Int) {
         val views = RemoteViews(ctx.packageName, R.layout.ghost_widget)
+        views.setInt(R.id.gl_logo_icon, "setColorFilter", Color.parseColor("#f5a623"))
         for (i in 0 until 10) {
             views.setViewVisibility(ROW_IDS[i], if (i < 5) View.VISIBLE else View.GONE)
             views.setTextViewText(SRC_IDS[i], "")
@@ -130,6 +131,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
 
     private fun showError(ctx: Context, mgr: AppWidgetManager, id: Int, offline: Boolean) {
         val views = RemoteViews(ctx.packageName, R.layout.ghost_widget)
+        views.setInt(R.id.gl_logo_icon, "setColorFilter", Color.parseColor("#f5a623"))
 
         for (i in 0 until 10) {
             views.setViewVisibility(ROW_IDS[i], if (i < 5) View.VISIBLE else View.GONE)
@@ -252,6 +254,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
         thumbs: List<Bitmap?>
     ) {
         val views = RemoteViews(ctx.packageName, R.layout.ghost_widget)
+        views.setInt(R.id.gl_logo_icon, "setColorFilter", Color.parseColor("#f5a623"))
 
         // Price header
         if (prices.isNotEmpty()) {

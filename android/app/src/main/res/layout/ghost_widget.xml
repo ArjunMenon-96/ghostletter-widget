@@ -20,7 +20,6 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@mipmap/ic_launcher_foreground"
-            android:tint="#f5a623"
             android:scaleType="fitCenter"/>
         <TextView
             android:id="@+id/gl_logo_text"
