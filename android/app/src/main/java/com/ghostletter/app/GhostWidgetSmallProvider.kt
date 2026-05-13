@@ -25,6 +25,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.atomic.AtomicBoolean
+import com.ghostletter.app.BuildConfig
 
 class GhostWidgetSmallProvider : AppWidgetProvider() {
 
@@ -95,6 +96,7 @@ class GhostWidgetSmallProvider : AppWidgetProvider() {
         views.setTextViewText(NUM_IDS[0],   "·")
         views.setTextViewText(TITLE_IDS[0], "Loading…")
         views.setTextViewText(R.id.gs_price, "")
+        views.setTextViewText(R.id.gs_footer, "v${BuildConfig.VERSION_NAME}")
         mgr.updateAppWidget(id, views)
     }
 
@@ -123,6 +125,7 @@ class GhostWidgetSmallProvider : AppWidgetProvider() {
         )
         views.setOnClickPendingIntent(R.id.gs_refresh, refreshPi)
         views.setOnClickPendingIntent(ROW_IDS[0], refreshPi)
+        views.setTextViewText(R.id.gs_footer, "v${BuildConfig.VERSION_NAME}")
 
         mgr.updateAppWidget(id, views)
     }
@@ -238,6 +241,7 @@ class GhostWidgetSmallProvider : AppWidgetProvider() {
             }
         }
 
+        views.setTextViewText(R.id.gs_footer, "v${BuildConfig.VERSION_NAME}")
         mgr.updateAppWidget(id, views)
     }
 

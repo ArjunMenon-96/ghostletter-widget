@@ -103,4 +103,16 @@
         <TextView android:id="@+id/gs_time_2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#3a3a30" android:textSize="8sp" android:paddingLeft="6dp"/>
     </LinearLayout>
 
+    <!-- Version footer -->
+    <TextView
+        android:id="@+id/gs_footer"
+        android:layout_width="match_parent"
+        android:layout_height="11dp"
+        android:background="#0d0d0a"
+        android:gravity="end|center_vertical"
+        android:paddingRight="8dp"
+        android:text=""
+        android:textColor="#1e1e18"
+        android:textSize="6sp"/>
+
 </LinearLayout>

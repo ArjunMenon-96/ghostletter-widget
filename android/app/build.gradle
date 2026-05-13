@@ -92,6 +92,10 @@ android {
     buildToolsVersion "35.0.0"
     compileSdk 35
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     namespace 'com.ghostletter.app'
     defaultConfig {
         applicationId 'com.ghostletter.app'

@@ -25,6 +25,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.atomic.AtomicBoolean
+import com.ghostletter.app.BuildConfig
 
 class GhostWidgetProvider : AppWidgetProvider() {
 
@@ -101,7 +102,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
         views.setTextViewText(NUM_IDS[0], "·")
         views.setTextViewText(TITLE_IDS[0], "Loading latest headlines…")
         views.setTextViewText(R.id.gl_price, "")
-        views.setTextViewText(R.id.gl_footer, "ghostletter.online · loading…")
+        views.setTextViewText(R.id.gl_footer, "ghostletter.online  v${BuildConfig.VERSION_NAME}  ·  loading…")
         mgr.updateAppWidget(id, views)
     }
 
@@ -130,7 +131,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
 
         // Header: keep price blank or last known — just show status
         views.setTextViewText(R.id.gl_price, if (offline) "● OFFLINE" else "● ERROR")
-        views.setTextViewText(R.id.gl_footer, "ghostletter.online · tap ↻ to refresh")
+        views.setTextViewText(R.id.gl_footer, "ghostletter.online  v${BuildConfig.VERSION_NAME}  ·  tap ↻ to refresh")
 
         // Wire refresh button (↻) and all visible rows to trigger refresh
         val refreshIntent = Intent(ctx, GhostWidgetProvider::class.java).apply { action = ACTION_REFRESH }
@@ -263,7 +264,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
             }
         }
 
-        views.setTextViewText(R.id.gl_footer, "ghostletter.online · updated ${formatNow()}")
+        views.setTextViewText(R.id.gl_footer, "ghostletter.online  v${BuildConfig.VERSION_NAME}  ·  updated ${formatNow()}")
         mgr.updateAppWidget(id, views)
     }
 
