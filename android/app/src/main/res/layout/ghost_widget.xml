@@ -12,24 +12,25 @@
         android:layout_height="32dp"
         android:background="#111109"
         android:gravity="center_vertical"
-        android:paddingLeft="10dp"
+        android:paddingLeft="8dp"
         android:paddingRight="6dp"
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/gl_logo_icon"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@mipmap/ic_launcher_foreground"
-            android:scaleType="fitCenter"/>
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/app_name"/>
         <TextView
             android:id="@+id/gl_logo_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="GhostLetter"
             android:textColor="#f5a623"
-            android:textSize="9sp"
+            android:textSize="10sp"
             android:textStyle="bold"
-            android:paddingLeft="4dp"
+            android:paddingLeft="6dp"
             android:paddingRight="8dp"/>
         <TextView
             android:id="@+id/gl_price"
@@ -59,27 +60,21 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:background="#0a0a08"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
         android:visibility="visible">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#0a0a08"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:orientation="horizontal">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/gl_src_0" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
-                <TextView android:id="@+id/gl_title_0" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/gl_thumb_0" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/gl_src_0" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
+            <TextView android:id="@+id/gl_title_0" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
         </LinearLayout>
-        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
+        <ImageView android:id="@+id/gl_thumb_0" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:src="@android:color/transparent" android:contentDescription="@string/app_name"/>
     </LinearLayout>
+    <TextView android:id="@+id/gl_div_0" android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
 
     <!-- Row 1 -->
     <LinearLayout
@@ -87,27 +82,21 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:background="#0d0d0a"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
         android:visibility="visible">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#0d0d0a"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:orientation="horizontal">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/gl_src_1" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
-                <TextView android:id="@+id/gl_title_1" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/gl_thumb_1" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/gl_src_1" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
+            <TextView android:id="@+id/gl_title_1" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
         </LinearLayout>
-        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
+        <ImageView android:id="@+id/gl_thumb_1" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:src="@android:color/transparent" android:contentDescription="@string/app_name"/>
     </LinearLayout>
+    <TextView android:id="@+id/gl_div_1" android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
 
     <!-- Row 2 -->
     <LinearLayout
@@ -115,27 +104,21 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:background="#0a0a08"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
         android:visibility="visible">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#0a0a08"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:orientation="horizontal">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/gl_src_2" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
-                <TextView android:id="@+id/gl_title_2" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/gl_thumb_2" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/gl_src_2" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
+            <TextView android:id="@+id/gl_title_2" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
         </LinearLayout>
-        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
+        <ImageView android:id="@+id/gl_thumb_2" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:src="@android:color/transparent" android:contentDescription="@string/app_name"/>
     </LinearLayout>
+    <TextView android:id="@+id/gl_div_2" android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
 
     <!-- Row 3 -->
     <LinearLayout
@@ -143,27 +126,21 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:background="#0d0d0a"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
         android:visibility="visible">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#0d0d0a"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:orientation="horizontal">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/gl_src_3" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
-                <TextView android:id="@+id/gl_title_3" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/gl_thumb_3" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/gl_src_3" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
+            <TextView android:id="@+id/gl_title_3" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
         </LinearLayout>
-        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
+        <ImageView android:id="@+id/gl_thumb_3" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:src="@android:color/transparent" android:contentDescription="@string/app_name"/>
     </LinearLayout>
+    <TextView android:id="@+id/gl_div_3" android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
 
     <!-- Row 4 -->
     <LinearLayout
@@ -171,167 +148,131 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:background="#0a0a08"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
         android:visibility="visible">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#0a0a08"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:orientation="horizontal">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/gl_src_4" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
-                <TextView android:id="@+id/gl_title_4" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/gl_thumb_4" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/gl_src_4" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
+            <TextView android:id="@+id/gl_title_4" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
         </LinearLayout>
-        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
+        <ImageView android:id="@+id/gl_thumb_4" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:src="@android:color/transparent" android:contentDescription="@string/app_name"/>
     </LinearLayout>
+    <TextView android:id="@+id/gl_div_4" android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text="" android:visibility="gone"/>
 
-    <!-- Row 5 (hidden by default) -->
+    <!-- Row 5 (hidden) -->
     <LinearLayout
         android:id="@+id/gl_row_5"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:background="#0d0d0a"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
         android:visibility="gone">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#0d0d0a"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:orientation="horizontal">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/gl_src_5" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
-                <TextView android:id="@+id/gl_title_5" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/gl_thumb_5" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/gl_src_5" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
+            <TextView android:id="@+id/gl_title_5" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
         </LinearLayout>
-        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
+        <ImageView android:id="@+id/gl_thumb_5" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:src="@android:color/transparent" android:contentDescription="@string/app_name"/>
     </LinearLayout>
+    <TextView android:id="@+id/gl_div_5" android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text="" android:visibility="gone"/>
 
-    <!-- Row 6 (hidden by default) -->
+    <!-- Row 6 (hidden) -->
     <LinearLayout
         android:id="@+id/gl_row_6"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:background="#0a0a08"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
         android:visibility="gone">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#0a0a08"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:orientation="horizontal">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/gl_src_6" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
-                <TextView android:id="@+id/gl_title_6" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/gl_thumb_6" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/gl_src_6" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
+            <TextView android:id="@+id/gl_title_6" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
         </LinearLayout>
-        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
+        <ImageView android:id="@+id/gl_thumb_6" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:src="@android:color/transparent" android:contentDescription="@string/app_name"/>
     </LinearLayout>
+    <TextView android:id="@+id/gl_div_6" android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text="" android:visibility="gone"/>
 
-    <!-- Row 7 (hidden by default) -->
+    <!-- Row 7 (hidden) -->
     <LinearLayout
         android:id="@+id/gl_row_7"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:background="#0d0d0a"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
         android:visibility="gone">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#0d0d0a"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:orientation="horizontal">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/gl_src_7" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
-                <TextView android:id="@+id/gl_title_7" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/gl_thumb_7" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/gl_src_7" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
+            <TextView android:id="@+id/gl_title_7" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
         </LinearLayout>
-        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
+        <ImageView android:id="@+id/gl_thumb_7" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:src="@android:color/transparent" android:contentDescription="@string/app_name"/>
     </LinearLayout>
+    <TextView android:id="@+id/gl_div_7" android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text="" android:visibility="gone"/>
 
-    <!-- Row 8 (hidden by default) -->
+    <!-- Row 8 (hidden) -->
     <LinearLayout
         android:id="@+id/gl_row_8"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:background="#0a0a08"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
         android:visibility="gone">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#0a0a08"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:orientation="horizontal">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/gl_src_8" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
-                <TextView android:id="@+id/gl_title_8" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/gl_thumb_8" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/gl_src_8" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
+            <TextView android:id="@+id/gl_title_8" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
         </LinearLayout>
-        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
+        <ImageView android:id="@+id/gl_thumb_8" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:src="@android:color/transparent" android:contentDescription="@string/app_name"/>
     </LinearLayout>
+    <TextView android:id="@+id/gl_div_8" android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text="" android:visibility="gone"/>
 
-    <!-- Row 9 (hidden by default) -->
+    <!-- Row 9 (hidden) -->
     <LinearLayout
         android:id="@+id/gl_row_9"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:background="#0d0d0a"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="horizontal"
         android:visibility="gone">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#0d0d0a"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:orientation="horizontal">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/gl_src_9" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
-                <TextView android:id="@+id/gl_title_9" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/gl_thumb_9" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/gl_src_9" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#a89060" android:textSize="9sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
+            <TextView android:id="@+id/gl_title_9" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#d4c08a" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
         </LinearLayout>
-        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
+        <ImageView android:id="@+id/gl_thumb_9" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:src="@android:color/transparent" android:contentDescription="@string/app_name"/>
     </LinearLayout>
+    <TextView android:id="@+id/gl_div_9" android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text="" android:visibility="gone"/>
 
     <!-- Footer -->
     <LinearLayout

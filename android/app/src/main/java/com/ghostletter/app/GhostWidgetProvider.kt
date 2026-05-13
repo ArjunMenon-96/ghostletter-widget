@@ -45,6 +45,8 @@ class GhostWidgetProvider : AppWidgetProvider() {
                                    R.id.gl_title_5, R.id.gl_title_6, R.id.gl_title_7, R.id.gl_title_8, R.id.gl_title_9)
         val THUMB_IDS = intArrayOf(R.id.gl_thumb_0, R.id.gl_thumb_1, R.id.gl_thumb_2, R.id.gl_thumb_3, R.id.gl_thumb_4,
                                    R.id.gl_thumb_5, R.id.gl_thumb_6, R.id.gl_thumb_7, R.id.gl_thumb_8, R.id.gl_thumb_9)
+        val DIV_IDS   = intArrayOf(R.id.gl_div_0, R.id.gl_div_1, R.id.gl_div_2, R.id.gl_div_3, R.id.gl_div_4,
+                                   R.id.gl_div_5, R.id.gl_div_6, R.id.gl_div_7, R.id.gl_div_8, R.id.gl_div_9)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -113,9 +115,10 @@ class GhostWidgetProvider : AppWidgetProvider() {
 
     private fun showLoading(ctx: Context, mgr: AppWidgetManager, id: Int) {
         val views = RemoteViews(ctx.packageName, R.layout.ghost_widget)
-        views.setInt(R.id.gl_logo_icon, "setColorFilter", Color.parseColor("#f5a623"))
         for (i in 0 until 10) {
-            views.setViewVisibility(ROW_IDS[i], if (i < 5) View.VISIBLE else View.GONE)
+            val vis = if (i < 5) View.VISIBLE else View.GONE
+            views.setViewVisibility(ROW_IDS[i], vis)
+            views.setViewVisibility(DIV_IDS[i], if (i < 4) View.VISIBLE else View.GONE)
             views.setTextViewText(SRC_IDS[i], "")
             views.setTextViewText(TITLE_IDS[i], "")
             views.setViewVisibility(THUMB_IDS[i], View.GONE)
@@ -131,10 +134,10 @@ class GhostWidgetProvider : AppWidgetProvider() {
 
     private fun showError(ctx: Context, mgr: AppWidgetManager, id: Int, offline: Boolean) {
         val views = RemoteViews(ctx.packageName, R.layout.ghost_widget)
-        views.setInt(R.id.gl_logo_icon, "setColorFilter", Color.parseColor("#f5a623"))
 
         for (i in 0 until 10) {
             views.setViewVisibility(ROW_IDS[i], if (i < 5) View.VISIBLE else View.GONE)
+            views.setViewVisibility(DIV_IDS[i], if (i < 4) View.VISIBLE else View.GONE)
             views.setTextViewText(SRC_IDS[i], "")
             views.setTextViewText(TITLE_IDS[i], "")
             views.setViewVisibility(THUMB_IDS[i], View.GONE)
@@ -254,7 +257,6 @@ class GhostWidgetProvider : AppWidgetProvider() {
         thumbs: List<Bitmap?>
     ) {
         val views = RemoteViews(ctx.packageName, R.layout.ghost_widget)
-        views.setInt(R.id.gl_logo_icon, "setColorFilter", Color.parseColor("#f5a623"))
 
         // Price header
         if (prices.isNotEmpty()) {
@@ -273,10 +275,12 @@ class GhostWidgetProvider : AppWidgetProvider() {
         val webPi = PendingIntent.getActivity(ctx, 0, webIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         views.setOnClickPendingIntent(R.id.gl_header, webPi)
 
-        // Story rows
+        // Story rows + dividers (divider sits BETWEEN rows, so last visible row has no divider)
         for (i in 0 until 10) {
             val visible = i < rows
             views.setViewVisibility(ROW_IDS[i], if (visible) View.VISIBLE else View.GONE)
+            // Divider visible only if both this row AND next row are visible
+            views.setViewVisibility(DIV_IDS[i], if (visible && i + 1 < rows) View.VISIBLE else View.GONE)
 
             if (visible && i < stories.size) {
                 val s = stories[i]
