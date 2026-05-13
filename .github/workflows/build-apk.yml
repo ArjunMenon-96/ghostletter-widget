@@ -1,4 +1,4 @@
-name: Build Android AAB + APK
+name: Build & Release Android APK
 
 on:
   push:
@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to create GitHub Releases
 
     steps:
       - name: Checkout
@@ -44,42 +46,40 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/ghostletter.jks
 
-      - name: Build release AAB (Play Store)
+      - name: Build release APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew bundleRelease \
-            -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/android/app/ghostletter.jks \
-            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
-            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
-
-      - name: Build release APK (sideload / testing)
-        run: |
-          cd android
           ./gradlew assembleRelease \
             -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/android/app/ghostletter.jks \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
-      - name: Rename outputs
+      - name: Rename APK
         run: |
-          mv android/app/build/outputs/bundle/release/app-release.aab \
-             android/app/build/outputs/bundle/release/ghostletter-v${{ github.run_number }}.aab
-          mv android/app/build/outputs/apk/release/app-release.apk \
-             android/app/build/outputs/apk/release/ghostletter-v${{ github.run_number }}.apk
+          cp android/app/build/outputs/apk/release/app-release.apk \
+             ghostletter-latest.apk
 
-      - name: Upload AAB (Play Store upload)
-        uses: actions/upload-artifact@v4
+      - name: Create / update GitHub Release (latest)
+        uses: softprops/action-gh-release@v2
         with:
-          name: ghostletter-aab-v${{ github.run_number }}
-          path: android/app/build/outputs/bundle/release/ghostletter-v${{ github.run_number }}.aab
-          retention-days: 60
+          tag_name: latest
+          name: "GhostLetter — Latest Build"
+          body: |
+            ## GhostLetter Android Widget
 
-      - name: Upload APK (sideload / testing)
-        uses: actions/upload-artifact@v4
-        with:
-          name: ghostletter-apk-v${{ github.run_number }}
-          path: android/app/build/outputs/apk/release/ghostletter-v${{ github.run_number }}.apk
-          retention-days: 30
+            Live crypto & DeFi news widget for your Android home screen.
+
+            **Install instructions:**
+            1. Download `ghostletter-latest.apk` below
+            2. Open it on your Android device
+            3. If prompted, allow "Install from unknown sources" for your browser/files app
+            4. Install and add the widget to your home screen
+
+            Built automatically from the latest code on `main`.
+          files: ghostletter-latest.apk
+          make_latest: true
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
