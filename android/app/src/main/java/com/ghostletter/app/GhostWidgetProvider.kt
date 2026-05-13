@@ -79,7 +79,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
     }
 
     private fun fetchStories(): List<Story> {
-        val url = URL("https://ghostletter111.vercel.app/api/news")
+        val url = URL("https://ghostletter.online/api/news")
         val conn = url.openConnection() as HttpURLConnection
         conn.connectTimeout = 10_000
         conn.readTimeout = 10_000
@@ -163,7 +163,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
         }
 
         // Footer timestamp
-        views.setTextViewText(R.id.gl_footer, "ghostletter111.vercel.app · updated ${formatNow()}")
+        views.setTextViewText(R.id.gl_footer, "ghostletter.online · updated ${formatNow()}")
 
         mgr.updateAppWidget(id, views)
     }

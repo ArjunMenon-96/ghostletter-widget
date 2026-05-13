@@ -178,7 +178,7 @@
             android:id="@+id/gl_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ghostletter111.vercel.app"
+            android:text="ghostletter.online"
             android:textColor="#2a2a20"
             android:textSize="7sp"
             android:gravity="end"/>
