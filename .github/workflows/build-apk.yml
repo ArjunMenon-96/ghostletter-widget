@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Android AAB + APK
 
 on:
   push:
@@ -44,24 +44,42 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/ghostletter.jks
 
-      - name: Build release APK
+      - name: Build release AAB (Play Store)
         run: |
           cd android
           chmod +x gradlew
+          ./gradlew bundleRelease \
+            -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/android/app/ghostletter.jks \
+            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+
+      - name: Build release APK (sideload / testing)
+        run: |
+          cd android
           ./gradlew assembleRelease \
             -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/android/app/ghostletter.jks \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
-      - name: Rename APK
+      - name: Rename outputs
         run: |
+          mv android/app/build/outputs/bundle/release/app-release.aab \
+             android/app/build/outputs/bundle/release/ghostletter-v${{ github.run_number }}.aab
           mv android/app/build/outputs/apk/release/app-release.apk \
              android/app/build/outputs/apk/release/ghostletter-v${{ github.run_number }}.apk
 
-      - name: Upload APK artifact
+      - name: Upload AAB (Play Store upload)
         uses: actions/upload-artifact@v4
         with:
-          name: ghostletter-v${{ github.run_number }}
+          name: ghostletter-aab-v${{ github.run_number }}
+          path: android/app/build/outputs/bundle/release/ghostletter-v${{ github.run_number }}.aab
+          retention-days: 60
+
+      - name: Upload APK (sideload / testing)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghostletter-apk-v${{ github.run_number }}
           path: android/app/build/outputs/apk/release/ghostletter-v${{ github.run_number }}.apk
           retention-days: 30
