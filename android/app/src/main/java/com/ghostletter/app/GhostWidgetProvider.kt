@@ -6,14 +6,18 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.view.View
 import android.widget.RemoteViews
 import org.json.JSONArray
 import org.json.JSONObject
@@ -31,15 +35,16 @@ class GhostWidgetProvider : AppWidgetProvider() {
 
     companion object {
         const val ACTION_REFRESH = "com.ghostletter.app.REFRESH_WIDGET"
-        // Guard against concurrent refreshes from rapid taps
         private val isUpdating = AtomicBoolean(false)
 
-        // Row/column view IDs for bulk operations
-        val ROW_IDS   = intArrayOf(R.id.gl_row_0, R.id.gl_row_1, R.id.gl_row_2, R.id.gl_row_3, R.id.gl_row_4)
-        val NUM_IDS   = intArrayOf(R.id.gl_num_0, R.id.gl_num_1, R.id.gl_num_2, R.id.gl_num_3, R.id.gl_num_4)
-        val SRC_IDS   = intArrayOf(R.id.gl_src_0, R.id.gl_src_1, R.id.gl_src_2, R.id.gl_src_3, R.id.gl_src_4)
-        val TIME_IDS  = intArrayOf(R.id.gl_time_0, R.id.gl_time_1, R.id.gl_time_2, R.id.gl_time_3, R.id.gl_time_4)
-        val TITLE_IDS = intArrayOf(R.id.gl_title_0, R.id.gl_title_1, R.id.gl_title_2, R.id.gl_title_3, R.id.gl_title_4)
+        val ROW_IDS   = intArrayOf(R.id.gl_row_0, R.id.gl_row_1, R.id.gl_row_2, R.id.gl_row_3, R.id.gl_row_4,
+                                   R.id.gl_row_5, R.id.gl_row_6, R.id.gl_row_7, R.id.gl_row_8, R.id.gl_row_9)
+        val SRC_IDS   = intArrayOf(R.id.gl_src_0, R.id.gl_src_1, R.id.gl_src_2, R.id.gl_src_3, R.id.gl_src_4,
+                                   R.id.gl_src_5, R.id.gl_src_6, R.id.gl_src_7, R.id.gl_src_8, R.id.gl_src_9)
+        val TITLE_IDS = intArrayOf(R.id.gl_title_0, R.id.gl_title_1, R.id.gl_title_2, R.id.gl_title_3, R.id.gl_title_4,
+                                   R.id.gl_title_5, R.id.gl_title_6, R.id.gl_title_7, R.id.gl_title_8, R.id.gl_title_9)
+        val THUMB_IDS = intArrayOf(R.id.gl_thumb_0, R.id.gl_thumb_1, R.id.gl_thumb_2, R.id.gl_thumb_3, R.id.gl_thumb_4,
+                                   R.id.gl_thumb_5, R.id.gl_thumb_6, R.id.gl_thumb_7, R.id.gl_thumb_8, R.id.gl_thumb_9)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -51,8 +56,12 @@ class GhostWidgetProvider : AppWidgetProvider() {
         }
     }
 
+    override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newOptions: Bundle) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        onUpdate(context, appWidgetManager, intArrayOf(appWidgetId))
+    }
+
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        // Prevent multiple simultaneous refreshes
         if (!isUpdating.compareAndSet(false, true)) return
 
         for (id in appWidgetIds) showLoading(context, appWidgetManager, id)
@@ -63,9 +72,13 @@ class GhostWidgetProvider : AppWidgetProvider() {
                     for (id in appWidgetIds) showError(context, appWidgetManager, id, offline = true)
                     return@Thread
                 }
-                val prices = tryFetchPrices()
+                val prices  = tryFetchPrices()
                 val stories = fetchStories()
-                for (id in appWidgetIds) updateWidget(context, appWidgetManager, id, stories, prices)
+                for (id in appWidgetIds) {
+                    val rows = visibleRows(appWidgetManager, id)
+                    val thumbs = stories.map { loadThumb(it.imageUrl) }
+                    updateWidget(context, appWidgetManager, id, stories, prices, rows, thumbs)
+                }
             } catch (e: Exception) {
                 for (id in appWidgetIds) showError(context, appWidgetManager, id, offline = false)
             } finally {
@@ -88,19 +101,26 @@ class GhostWidgetProvider : AppWidgetProvider() {
         }
     }
 
+    // ── Visible row calculation ─────────────────────────────────────────────
+
+    private fun visibleRows(mgr: AppWidgetManager, id: Int): Int {
+        val opts = mgr.getAppWidgetOptions(id)
+        val maxH = opts.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 240)
+        return ((maxH - 56) / 44).coerceIn(1, 10)
+    }
+
     // ── Loading state ───────────────────────────────────────────────────────
 
     private fun showLoading(ctx: Context, mgr: AppWidgetManager, id: Int) {
         val views = RemoteViews(ctx.packageName, R.layout.ghost_widget)
-        // Reset all rows cleanly
-        for (i in 0 until 5) {
-            views.setTextViewText(NUM_IDS[i], "")
+        for (i in 0 until 10) {
+            views.setViewVisibility(ROW_IDS[i], if (i < 5) View.VISIBLE else View.GONE)
             views.setTextViewText(SRC_IDS[i], "")
-            views.setTextViewText(TIME_IDS[i], "")
             views.setTextViewText(TITLE_IDS[i], "")
+            views.setViewVisibility(THUMB_IDS[i], View.GONE)
         }
-        views.setTextViewText(NUM_IDS[0], "·")
-        views.setTextViewText(TITLE_IDS[0], "Loading latest headlines…")
+        views.setTextViewText(SRC_IDS[0], "LOADING")
+        views.setTextViewText(TITLE_IDS[0], "Fetching latest headlines…")
         views.setTextViewText(R.id.gl_price, "")
         views.setTextViewText(R.id.gl_footer, "ghostletter.online  v${BuildConfig.VERSION_NAME}  ·  loading…")
         mgr.updateAppWidget(id, views)
@@ -111,36 +131,21 @@ class GhostWidgetProvider : AppWidgetProvider() {
     private fun showError(ctx: Context, mgr: AppWidgetManager, id: Int, offline: Boolean) {
         val views = RemoteViews(ctx.packageName, R.layout.ghost_widget)
 
-        // Clear all rows
-        for (i in 0 until 5) {
-            views.setTextViewText(NUM_IDS[i], "")
+        for (i in 0 until 10) {
+            views.setViewVisibility(ROW_IDS[i], if (i < 5) View.VISIBLE else View.GONE)
             views.setTextViewText(SRC_IDS[i], "")
-            views.setTextViewText(TIME_IDS[i], "")
             views.setTextViewText(TITLE_IDS[i], "")
+            views.setViewVisibility(THUMB_IDS[i], View.GONE)
         }
 
-        // Row 0: error message
-        views.setTextViewText(NUM_IDS[0], "!")
-        if (offline) {
-            views.setTextViewText(SRC_IDS[0], "NO INTERNET")
-            views.setTextViewText(TITLE_IDS[0], "Connect to Wi-Fi or mobile data, then tap ↻ to retry.")
-        } else {
-            views.setTextViewText(SRC_IDS[0], "FEED UNAVAILABLE")
-            views.setTextViewText(TITLE_IDS[0], "Couldn't load headlines. Tap ↻ to retry.")
-        }
-
-        // Header: keep price blank or last known — just show status
+        views.setTextViewText(SRC_IDS[0], if (offline) "NO INTERNET" else "FEED UNAVAILABLE")
+        views.setTextViewText(TITLE_IDS[0], if (offline) "Connect to Wi-Fi or mobile data, then tap ↻ to retry." else "Couldn't load headlines. Tap ↻ to retry.")
         views.setTextViewText(R.id.gl_price, if (offline) "● OFFLINE" else "● ERROR")
         views.setTextViewText(R.id.gl_footer, "ghostletter.online  v${BuildConfig.VERSION_NAME}  ·  tap ↻ to refresh")
 
-        // Wire refresh button (↻) and all visible rows to trigger refresh
         val refreshIntent = Intent(ctx, GhostWidgetProvider::class.java).apply { action = ACTION_REFRESH }
-        val refreshPi = PendingIntent.getBroadcast(
-            ctx, 0, refreshIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        val refreshPi = PendingIntent.getBroadcast(ctx, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         views.setOnClickPendingIntent(R.id.gl_refresh, refreshPi)
-        // Make row 0 (the error message) tappable to refresh too
         views.setOnClickPendingIntent(ROW_IDS[0], refreshPi)
 
         mgr.updateAppWidget(id, views)
@@ -204,7 +209,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
         val arr: JSONArray = try { JSONArray(json) } catch (_: Exception) {
             JSONObject(json).optJSONArray("items") ?: JSONArray()
         }
-        return (0 until minOf(arr.length(), 5)).map { i ->
+        return (0 until minOf(arr.length(), 10)).map { i ->
             val obj = arr.getJSONObject(i)
             Story(
                 title    = obj.optString("title", "").trim(),
@@ -212,13 +217,40 @@ class GhostWidgetProvider : AppWidgetProvider() {
                 source   = obj.optString("source", obj.optString("feedTitle", "")).uppercase(),
                 category = obj.optString("category", "").uppercase(),
                 pubDate  = obj.optString("pubDate", obj.optString("publishedAt", "")),
+                imageUrl = obj.optString("imageUrl", obj.optString("image", obj.optString("thumbnail", ""))).takeIf { it.isNotEmpty() },
             )
         }
     }
 
+    // ── Thumbnail loading ───────────────────────────────────────────────────
+
+    private fun loadThumb(urlStr: String?): Bitmap? {
+        if (urlStr.isNullOrEmpty()) return null
+        return try {
+            val conn = URL(urlStr).openConnection() as HttpURLConnection
+            conn.connectTimeout = 5_000
+            conn.readTimeout    = 5_000
+            conn.doInput = true
+            conn.connect()
+            val raw = BitmapFactory.decodeStream(conn.inputStream) ?: return null
+            conn.disconnect()
+            val maxPx = 128
+            if (raw.width <= maxPx) raw
+            else Bitmap.createScaledBitmap(raw, maxPx, (raw.height * maxPx.toFloat() / raw.width).toInt(), true)
+        } catch (_: Exception) { null }
+    }
+
     // ── Widget rendering ────────────────────────────────────────────────────
 
-    private fun updateWidget(ctx: Context, mgr: AppWidgetManager, id: Int, stories: List<Story>, prices: List<CoinPrice>) {
+    private fun updateWidget(
+        ctx: Context,
+        mgr: AppWidgetManager,
+        id: Int,
+        stories: List<Story>,
+        prices: List<CoinPrice>,
+        rows: Int,
+        thumbs: List<Bitmap?>
+    ) {
         val views = RemoteViews(ctx.packageName, R.layout.ghost_widget)
 
         // Price header
@@ -239,15 +271,33 @@ class GhostWidgetProvider : AppWidgetProvider() {
         views.setOnClickPendingIntent(R.id.gl_header, webPi)
 
         // Story rows
-        for (i in 0 until 5) {
-            if (i < stories.size) {
+        for (i in 0 until 10) {
+            val visible = i < rows
+            views.setViewVisibility(ROW_IDS[i], if (visible) View.VISIBLE else View.GONE)
+
+            if (visible && i < stories.size) {
                 val s = stories[i]
-                views.setTextViewText(NUM_IDS[i],   "${i + 1}")
-                views.setTextViewText(SRC_IDS[i],
-                    if (s.category.isNotEmpty()) "${s.source.take(10)}  ·  ${s.category.take(8)}"
-                    else s.source.take(16))
-                views.setTextViewText(TIME_IDS[i],  timeAgo(s.pubDate))
+
+                // Merged source line: SOURCE  ·  CATEGORY  ·  7m
+                val timeStr = timeAgo(s.pubDate)
+                val srcText = buildString {
+                    append(s.source)
+                    if (s.category.isNotEmpty()) append("  ·  ${s.category}")
+                    if (timeStr.isNotEmpty()) append("  ·  $timeStr")
+                }
+                views.setTextViewText(SRC_IDS[i], srcText)
                 views.setTextViewText(TITLE_IDS[i], s.title)
+
+                // Thumbnail
+                val bmp = thumbs.getOrNull(i)
+                if (bmp != null) {
+                    views.setImageViewBitmap(THUMB_IDS[i], bmp)
+                    views.setViewVisibility(THUMB_IDS[i], View.VISIBLE)
+                } else {
+                    views.setViewVisibility(THUMB_IDS[i], View.GONE)
+                }
+
+                // Row tap → open article
                 if (s.link.isNotEmpty()) {
                     val pi = PendingIntent.getActivity(
                         ctx, 100 + i,
@@ -256,11 +306,10 @@ class GhostWidgetProvider : AppWidgetProvider() {
                     )
                     views.setOnClickPendingIntent(ROW_IDS[i], pi)
                 }
-            } else {
-                views.setTextViewText(NUM_IDS[i],   "")
-                views.setTextViewText(SRC_IDS[i],   "")
-                views.setTextViewText(TIME_IDS[i],  "")
+            } else if (visible) {
+                views.setTextViewText(SRC_IDS[i], "")
                 views.setTextViewText(TITLE_IDS[i], "")
+                views.setViewVisibility(THUMB_IDS[i], View.GONE)
             }
         }
 
@@ -270,7 +319,14 @@ class GhostWidgetProvider : AppWidgetProvider() {
 
     // ── Helpers ─────────────────────────────────────────────────────────────
 
-    data class Story(val title: String, val link: String, val source: String, val category: String, val pubDate: String)
+    data class Story(
+        val title: String,
+        val link: String,
+        val source: String,
+        val category: String,
+        val pubDate: String,
+        val imageUrl: String?,
+    )
 
     private fun timeAgo(pubDate: String): String {
         if (pubDate.isEmpty()) return ""
