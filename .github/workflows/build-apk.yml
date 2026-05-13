@@ -9,11 +9,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # needed to create GitHub Releases
+      contents: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set version
+        id: version
+        run: |
+          echo "code=${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "name=1.0.${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "tag=v1.0.${{ github.run_number }}" >> $GITHUB_OUTPUT
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -51,6 +58,8 @@ jobs:
           cd android
           chmod +x gradlew
           ./gradlew assembleRelease \
+            -PversionCode=${{ steps.version.outputs.code }} \
+            -PversionName=${{ steps.version.outputs.name }} \
             -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/android/app/ghostletter.jks \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
@@ -59,27 +68,44 @@ jobs:
       - name: Rename APK
         run: |
           cp android/app/build/outputs/apk/release/app-release.apk \
+             ghostletter-${{ steps.version.outputs.tag }}.apk
+          cp ghostletter-${{ steps.version.outputs.tag }}.apk \
              ghostletter-latest.apk
 
-      - name: Create / update GitHub Release (latest)
+      - name: Create versioned GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: "GhostLetter ${{ steps.version.outputs.tag }}"
+          body: |
+            **Version:** `${{ steps.version.outputs.name }}`
+            **Build:** `#${{ steps.version.outputs.code }}`
+            **Commit:** `${{ github.sha }}`
+
+            ### Install
+            Download `ghostletter-${{ steps.version.outputs.tag }}.apk` below.
+            If upgrading from a previous version, Android will update in-place (no data loss).
+
+            ### What's new
+            See [commit history](https://github.com/${{ github.repository }}/commits/main) for changes.
+          files: ghostletter-${{ steps.version.outputs.tag }}.apk
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update 'latest' release (stable download URL)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
-          name: "GhostLetter — Latest Build"
+          name: "GhostLetter — Latest (${{ steps.version.outputs.tag }})"
           body: |
-            ## GhostLetter Android Widget
+            Always points to the most recent build.
+            **Current version:** `${{ steps.version.outputs.name }}` (build #${{ steps.version.outputs.code }})
 
-            Live crypto & DeFi news widget for your Android home screen.
-
-            **Install instructions:**
-            1. Download `ghostletter-latest.apk` below
-            2. Open it on your Android device
-            3. If prompted, allow "Install from unknown sources" for your browser/files app
-            4. Install and add the widget to your home screen
-
-            Built automatically from the latest code on `main`.
+            Direct APK download URL (permanent):
+            `https://github.com/${{ github.repository }}/releases/download/latest/ghostletter-latest.apk`
           files: ghostletter-latest.apk
-          make_latest: true
+          make_latest: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
