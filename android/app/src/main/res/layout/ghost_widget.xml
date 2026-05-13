@@ -78,7 +78,7 @@
             </LinearLayout>
             <ImageView android:id="@+id/gl_thumb_0" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
         </LinearLayout>
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14"/>
+        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
     </LinearLayout>
 
     <!-- Row 1 -->
@@ -106,7 +106,7 @@
             </LinearLayout>
             <ImageView android:id="@+id/gl_thumb_1" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
         </LinearLayout>
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14"/>
+        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
     </LinearLayout>
 
     <!-- Row 2 -->
@@ -134,7 +134,7 @@
             </LinearLayout>
             <ImageView android:id="@+id/gl_thumb_2" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
         </LinearLayout>
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14"/>
+        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
     </LinearLayout>
 
     <!-- Row 3 -->
@@ -162,7 +162,7 @@
             </LinearLayout>
             <ImageView android:id="@+id/gl_thumb_3" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
         </LinearLayout>
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14"/>
+        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
     </LinearLayout>
 
     <!-- Row 4 -->
@@ -190,7 +190,7 @@
             </LinearLayout>
             <ImageView android:id="@+id/gl_thumb_4" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
         </LinearLayout>
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14"/>
+        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
     </LinearLayout>
 
     <!-- Row 5 (hidden by default) -->
@@ -218,7 +218,7 @@
             </LinearLayout>
             <ImageView android:id="@+id/gl_thumb_5" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
         </LinearLayout>
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14"/>
+        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
     </LinearLayout>
 
     <!-- Row 6 (hidden by default) -->
@@ -246,7 +246,7 @@
             </LinearLayout>
             <ImageView android:id="@+id/gl_thumb_6" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
         </LinearLayout>
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14"/>
+        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
     </LinearLayout>
 
     <!-- Row 7 (hidden by default) -->
@@ -274,7 +274,7 @@
             </LinearLayout>
             <ImageView android:id="@+id/gl_thumb_7" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
         </LinearLayout>
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14"/>
+        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
     </LinearLayout>
 
     <!-- Row 8 (hidden by default) -->
@@ -302,7 +302,7 @@
             </LinearLayout>
             <ImageView android:id="@+id/gl_thumb_8" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
         </LinearLayout>
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14"/>
+        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
     </LinearLayout>
 
     <!-- Row 9 (hidden by default) -->
@@ -330,7 +330,7 @@
             </LinearLayout>
             <ImageView android:id="@+id/gl_thumb_9" android:layout_width="44dp" android:layout_height="44dp" android:scaleType="centerCrop" android:visibility="gone" android:layout_marginLeft="6dp"/>
         </LinearLayout>
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14"/>
+        <TextView android:layout_width="match_parent" android:layout_height="1dp" android:background="#1a1a14" android:text=""/>
     </LinearLayout>
 
     <!-- Footer -->
