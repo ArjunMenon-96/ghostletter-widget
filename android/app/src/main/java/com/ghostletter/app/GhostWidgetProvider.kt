@@ -216,7 +216,13 @@ class GhostWidgetProvider : AppWidgetProvider() {
         }
         metals.forEach { metal ->
             if (sb.isNotEmpty()) sb.append("   ")
-            sb.append("${metal.symbol} ${formatPrice(metal.price)} ")
+            val priceStr = if (metal.isInr) {
+                val unit = if (metal.symbol == "GOLD") "/10g" else "/kg"
+                "₹${String.format("%,.0f", metal.price)}$unit"
+            } else {
+                formatPrice(metal.price)
+            }
+            sb.append("${metal.symbol} $priceStr ")
             val arrow = if (metal.change24h >= 0) "▲" else "▼"
             val pct   = String.format("%.1f%%", Math.abs(metal.change24h))
             val start = sb.length
@@ -229,31 +235,52 @@ class GhostWidgetProvider : AppWidgetProvider() {
 
     // ── Metals (gold/silver) fetching ───────────────────────────────────────
 
-    data class MetalPrice(val symbol: String, val price: Double, val change24h: Double = 0.0)
+    data class MetalPrice(val symbol: String, val price: Double, val change24h: Double = 0.0, val isInr: Boolean = false)
 
     private fun tryFetchMetals(): List<MetalPrice> = try { fetchMetals() } catch (_: Exception) { emptyList() }
 
+    private fun fetchYahooMeta(ticker: String): JSONObject {
+        val conn = URL("https://query1.finance.yahoo.com/v8/finance/chart/$ticker?interval=1d&range=5d")
+            .openConnection() as HttpURLConnection
+        conn.connectTimeout = 8_000
+        conn.readTimeout    = 8_000
+        conn.setRequestProperty("User-Agent", "Mozilla/5.0")
+        return try {
+            JSONObject(conn.inputStream.bufferedReader().readText())
+                .getJSONObject("chart").getJSONArray("result").getJSONObject(0).getJSONObject("meta")
+        } finally { conn.disconnect() }
+    }
+
     private fun fetchMetals(): List<MetalPrice> {
         val results = mutableListOf<MetalPrice>()
+
+        // Fetch USD/INR rate
+        val inrRate = try {
+            fetchYahooMeta("USDINR=X").getDouble("regularMarketPrice")
+        } catch (_: Exception) { 0.0 }
+
+        val TROY_OZ_G = 31.1035
+
         for ((ticker, sym) in listOf("GC=F" to "XAU", "SI=F" to "XAG")) {
             try {
-                val conn = URL("https://query1.finance.yahoo.com/v8/finance/chart/$ticker?interval=1d&range=5d")
-                    .openConnection() as HttpURLConnection
-                conn.connectTimeout = 8_000
-                conn.readTimeout    = 8_000
-                conn.setRequestProperty("User-Agent", "Mozilla/5.0")
-                val meta = try {
-                    JSONObject(conn.inputStream.bufferedReader().readText())
-                        .getJSONObject("chart")
-                        .getJSONArray("result")
-                        .getJSONObject(0)
-                        .getJSONObject("meta")
-                } finally { conn.disconnect() }
-                val price = meta.getDouble("regularMarketPrice")
-                val prev  = if (meta.has("chartPreviousClose")) meta.getDouble("chartPreviousClose") else 0.0
-                val change24h = if (prev != 0.0) ((price - prev) / prev) * 100.0 else 0.0
-                results.add(MetalPrice(sym, price, change24h))
-            } catch (_: Exception) { /* skip this metal */ }
+                val meta = fetchYahooMeta(ticker)
+                val priceUsd = meta.getDouble("regularMarketPrice")
+                val prev     = if (meta.has("chartPreviousClose")) meta.getDouble("chartPreviousClose") else 0.0
+                val change24h = if (prev != 0.0) ((priceUsd - prev) / prev) * 100.0 else 0.0
+
+                // USD price entry
+                results.add(MetalPrice(sym, priceUsd, change24h))
+
+                // INR price entry (gold per 10g, silver per kg)
+                if (inrRate > 0.0) {
+                    val (inrSym, inrPrice) = if (sym == "XAU") {
+                        "GOLD" to Math.round(priceUsd * inrRate / TROY_OZ_G * 10).toDouble()
+                    } else {
+                        "SILVER" to Math.round(priceUsd * inrRate / TROY_OZ_G * 1000).toDouble()
+                    }
+                    results.add(MetalPrice(inrSym, inrPrice, change24h, isInr = true))
+                }
+            } catch (_: Exception) { /* skip */ }
         }
         return results
     }
