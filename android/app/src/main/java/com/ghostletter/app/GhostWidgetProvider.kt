@@ -216,30 +216,46 @@ class GhostWidgetProvider : AppWidgetProvider() {
         }
         metals.forEach { metal ->
             if (sb.isNotEmpty()) sb.append("   ")
-            sb.append("${metal.symbol} ${formatPrice(metal.price)}")
+            sb.append("${metal.symbol} ${formatPrice(metal.price)} ")
+            val arrow = if (metal.change24h >= 0) "▲" else "▼"
+            val pct   = String.format("%.1f%%", Math.abs(metal.change24h))
+            val start = sb.length
+            sb.append("$arrow$pct")
+            val color = if (metal.change24h >= 0) Color.parseColor("#52c41a") else Color.parseColor("#ff4d4f")
+            sb.setSpan(ForegroundColorSpan(color), start, sb.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         return sb
     }
 
     // ── Metals (gold/silver) fetching ───────────────────────────────────────
 
-    data class MetalPrice(val symbol: String, val price: Double)
+    data class MetalPrice(val symbol: String, val price: Double, val change24h: Double = 0.0)
 
     private fun tryFetchMetals(): List<MetalPrice> = try { fetchMetals() } catch (_: Exception) { emptyList() }
 
     private fun fetchMetals(): List<MetalPrice> {
-        val conn = URL("https://api.metals.live/v1/spot").openConnection() as HttpURLConnection
-        conn.connectTimeout = 8_000
-        conn.readTimeout    = 8_000
-        conn.setRequestProperty("User-Agent", "GhostLetter-Widget/1.0")
-        return try {
-            val arr = org.json.JSONArray(conn.inputStream.bufferedReader().readText())
-            val spot = arr.getJSONObject(0)
-            buildList {
-                if (spot.has("gold"))   add(MetalPrice("XAU", spot.getDouble("gold")))
-                if (spot.has("silver")) add(MetalPrice("XAG", spot.getDouble("silver")))
-            }
-        } finally { conn.disconnect() }
+        val results = mutableListOf<MetalPrice>()
+        for ((ticker, sym) in listOf("GC=F" to "XAU", "SI=F" to "XAG")) {
+            try {
+                val conn = URL("https://query1.finance.yahoo.com/v8/finance/chart/$ticker?interval=1d&range=5d")
+                    .openConnection() as HttpURLConnection
+                conn.connectTimeout = 8_000
+                conn.readTimeout    = 8_000
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0")
+                val meta = try {
+                    JSONObject(conn.inputStream.bufferedReader().readText())
+                        .getJSONObject("chart")
+                        .getJSONArray("result")
+                        .getJSONObject(0)
+                        .getJSONObject("meta")
+                } finally { conn.disconnect() }
+                val price = meta.getDouble("regularMarketPrice")
+                val prev  = if (meta.has("chartPreviousClose")) meta.getDouble("chartPreviousClose") else 0.0
+                val change24h = if (prev != 0.0) ((price - prev) / prev) * 100.0 else 0.0
+                results.add(MetalPrice(sym, price, change24h))
+            } catch (_: Exception) { /* skip this metal */ }
+        }
+        return results
     }
 
     // ── News fetching ───────────────────────────────────────────────────────
