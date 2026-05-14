@@ -217,7 +217,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
         metals.forEach { metal ->
             if (sb.isNotEmpty()) sb.append("   ")
             val priceStr = if (metal.isInr) {
-                val unit = if (metal.symbol == "GOLD") "/10g" else "/kg"
+                val unit = if (metal.symbol == "GOLD") "/g" else "/kg"
                 "₹${String.format("%,.0f", metal.price)}$unit"
             } else {
                 formatPrice(metal.price)
@@ -268,13 +268,10 @@ class GhostWidgetProvider : AppWidgetProvider() {
                 val prev     = if (meta.has("chartPreviousClose")) meta.getDouble("chartPreviousClose") else 0.0
                 val change24h = if (prev != 0.0) ((priceUsd - prev) / prev) * 100.0 else 0.0
 
-                // USD price entry
-                results.add(MetalPrice(sym, priceUsd, change24h))
-
-                // INR price entry (gold per 10g, silver per kg)
+                // INR only (gold per 1g, silver per kg)
                 if (inrRate > 0.0) {
                     val (inrSym, inrPrice) = if (sym == "XAU") {
-                        "GOLD" to Math.round(priceUsd * inrRate / TROY_OZ_G * 10).toDouble()
+                        "GOLD" to Math.round(priceUsd * inrRate / TROY_OZ_G).toDouble()
                     } else {
                         "SILVER" to Math.round(priceUsd * inrRate / TROY_OZ_G * 1000).toDouble()
                     }
