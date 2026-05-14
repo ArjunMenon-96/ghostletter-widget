@@ -79,11 +79,13 @@ class GhostWidgetProvider : AppWidgetProvider() {
                     return@Thread
                 }
 
-                // Fetch prices and stories concurrently
-                val pricesFuture  = pool.submit<List<CoinPrice>> { tryFetchPrices() }
-                val storiesFuture = pool.submit<List<Story>>     { fetchStories() }
+                // Fetch prices, metals, and stories concurrently
+                val pricesFuture  = pool.submit<List<CoinPrice>>  { tryFetchPrices() }
+                val metalsFuture  = pool.submit<List<MetalPrice>>  { tryFetchMetals() }
+                val storiesFuture = pool.submit<List<Story>>       { fetchStories() }
 
                 val prices  = pricesFuture.get(12, TimeUnit.SECONDS)
+                val metals  = metalsFuture.get(12, TimeUnit.SECONDS)
                 val stories = storiesFuture.get(12, TimeUnit.SECONDS)
 
                 for (id in appWidgetIds) {
@@ -95,7 +97,7 @@ class GhostWidgetProvider : AppWidgetProvider() {
                     val thumbs = thumbFutures.map { f ->
                         try { f.get(5, TimeUnit.SECONDS) } catch (_: Exception) { null }
                     }
-                    updateWidget(context, appWidgetManager, id, stories, prices, rows, thumbs)
+                    updateWidget(context, appWidgetManager, id, stories, prices, metals, rows, thumbs)
                 }
             } catch (e: Exception) {
                 for (id in appWidgetIds) showError(context, appWidgetManager, id, offline = false)
@@ -200,10 +202,10 @@ class GhostWidgetProvider : AppWidgetProvider() {
         else           -> "$${DecimalFormat("0.0000").format(price)}"
     }
 
-    private fun buildPriceSpan(prices: List<CoinPrice>): SpannableStringBuilder {
+    private fun buildPriceSpan(prices: List<CoinPrice>, metals: List<MetalPrice>): SpannableStringBuilder {
         val sb = SpannableStringBuilder()
         prices.forEachIndexed { i, coin ->
-            if (i > 0) sb.append("   ")
+            if (i > 0 || sb.isNotEmpty()) sb.append("   ")
             sb.append("${coin.symbol} ${formatPrice(coin.price)} ")
             val arrow = if (coin.change24h >= 0) "▲" else "▼"
             val pct   = String.format("%.1f%%", Math.abs(coin.change24h))
@@ -212,7 +214,32 @@ class GhostWidgetProvider : AppWidgetProvider() {
             val color = if (coin.change24h >= 0) Color.parseColor("#52c41a") else Color.parseColor("#ff4d4f")
             sb.setSpan(ForegroundColorSpan(color), start, sb.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
+        metals.forEach { metal ->
+            if (sb.isNotEmpty()) sb.append("   ")
+            sb.append("${metal.symbol} ${formatPrice(metal.price)}")
+        }
         return sb
+    }
+
+    // ── Metals (gold/silver) fetching ───────────────────────────────────────
+
+    data class MetalPrice(val symbol: String, val price: Double)
+
+    private fun tryFetchMetals(): List<MetalPrice> = try { fetchMetals() } catch (_: Exception) { emptyList() }
+
+    private fun fetchMetals(): List<MetalPrice> {
+        val conn = URL("https://api.metals.live/v1/spot").openConnection() as HttpURLConnection
+        conn.connectTimeout = 8_000
+        conn.readTimeout    = 8_000
+        conn.setRequestProperty("User-Agent", "GhostLetter-Widget/1.0")
+        return try {
+            val arr = org.json.JSONArray(conn.inputStream.bufferedReader().readText())
+            val spot = arr.getJSONObject(0)
+            buildList {
+                if (spot.has("gold"))   add(MetalPrice("XAU", spot.getDouble("gold")))
+                if (spot.has("silver")) add(MetalPrice("XAG", spot.getDouble("silver")))
+            }
+        } finally { conn.disconnect() }
     }
 
     // ── News fetching ───────────────────────────────────────────────────────
@@ -270,14 +297,15 @@ class GhostWidgetProvider : AppWidgetProvider() {
         id: Int,
         stories: List<Story>,
         prices: List<CoinPrice>,
+        metals: List<MetalPrice>,
         rows: Int,
         thumbs: List<Bitmap?>
     ) {
         val views = RemoteViews(ctx.packageName, R.layout.ghost_widget)
 
         // Price header
-        if (prices.isNotEmpty()) {
-            views.setTextViewText(R.id.gl_price, buildPriceSpan(prices))
+        if (prices.isNotEmpty() || metals.isNotEmpty()) {
+            views.setTextViewText(R.id.gl_price, buildPriceSpan(prices, metals))
         } else {
             views.setTextViewText(R.id.gl_price, "● LIVE")
         }
